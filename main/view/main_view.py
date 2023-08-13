@@ -30,9 +30,10 @@ class MainView(Gtk.Window):
 
     def on_download_button_clicked(self, widget):
         loading_dialog = LoadingDialog(self, "Загрузка из API...", MainController.load_from_api)
-        response = loading_dialog.run()
-        for line in loading_dialog.get_result():
-            self.add_list_item(line)
+        loading_dialog.run()
+        for api_result in loading_dialog.get_result():
+            for item in api_result:
+                self.add_list_item(f"{item['name']} {item['price']}")
         loading_dialog.destroy()
         self.show_all()
 
