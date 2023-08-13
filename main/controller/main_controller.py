@@ -1,3 +1,5 @@
+from ..model.main_model import fetch_apis
+
 class MainController():
     @staticmethod
     def csv_reader():
@@ -7,6 +9,8 @@ class MainController():
     @staticmethod
     def load_from_file() -> list:
         return [row for row in MainController.csv_reader()]
+
+
     @staticmethod
     def load_from_api() -> list:
-        return [f"Example string {i}" for i in range(100)]
+        return fetch_apis()
