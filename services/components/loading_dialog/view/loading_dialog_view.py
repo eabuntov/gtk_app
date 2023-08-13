@@ -1,5 +1,7 @@
+import threading
 from typing import Callable
 from gi.repository import Gtk
+from gi.repository import GObject
 
 
 class LoadingDialog(Gtk.Dialog):
@@ -8,14 +10,24 @@ class LoadingDialog(Gtk.Dialog):
                                                      Gtk.STOCK_OK, Gtk.ResponseType.OK))
 
         box = self.get_content_area()
-        spinner = Gtk.Spinner()
-        box.pack_start(spinner, True, True, 0)
-        spinner.start()
+        self.spinner = Gtk.Spinner()
+        box.pack_start(self.spinner, True, True, 0)
+        self.spinner.start()
         self.result = ""
-        # self.connect("response", self.on_response)
         self.show_all()
-        self.result = load_func()
+        self.load_func = load_func
+        self.work_thread = threading.Thread(target=self.run_thread)
+        self.work_thread.start()
+        self.running = True
         pass
+
+    def run_thread(self):
+        self.result = self.load_func()
+        GObject.idle_add(self.stop_progress)
+
+    def stop_progress(self):
+        self.spinner.stop()
+        self.work_thread.join()
 
     def get_result(self):
         return self.result
