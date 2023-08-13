@@ -1,16 +1,12 @@
-from ..model.main_model import fetch_apis
+from ..model.main_model import MainModel
+
 
 class MainController():
-    @staticmethod
-    def csv_reader():
-        for row in open("test_assignment/База для тестового.csv", "r"):
-            parsed = row.split(',')
-            yield f"{parsed[1]} {parsed[3]}"
+
     @staticmethod
     def load_from_file() -> list:
-        return [row for row in MainController.csv_reader()]
-
+        return [row for row in MainModel().csv_reader()]
 
     @staticmethod
     def load_from_api() -> list:
-        return fetch_apis()
+        return MainModel().fetch_apis()

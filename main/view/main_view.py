@@ -31,6 +31,7 @@ class MainView(Gtk.Window):
     def on_download_button_clicked(self, widget):
         loading_dialog = LoadingDialog(self, "Загрузка из API...", MainController.load_from_api)
         loading_dialog.run()
+        self.clear_list_box()
         for api_result in loading_dialog.get_result():
             for item in api_result:
                 self.add_list_item(f"{item['name']} {item['price']}")
@@ -40,6 +41,7 @@ class MainView(Gtk.Window):
     def on_file_button_clicked(self, widget):
         loading_dialog = LoadingDialog(self, "Загрузка из файла...", MainController.load_from_file)
         loading_dialog.run()
+        self.clear_list_box()
         for line in loading_dialog.get_result():
             self.add_list_item(line)
         loading_dialog.destroy()
@@ -50,6 +52,10 @@ class MainView(Gtk.Window):
         label = Gtk.Label(label=text)
         row.add(label)
         self.list_box.add(row)
+
+    def clear_list_box(self):
+        while row := self.list_box.get_row_at_index(0):
+            self.list_box.remove(row)
 
 if __name__ == "__main__":
     win = MainView()
