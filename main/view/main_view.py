@@ -4,14 +4,13 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GdkPixbuf, Gio
 
 from main.controller.main_controller import MainController
-from services.components.loading_dialog.view.loading_dialog_view import LoadingDialog
+from services.components.loading_dialog import LoadingDialog
 
 
 class MainView(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title="Скачать приложение")
+        Gtk.Window.__init__(self, title="Приложение для скачивания")
         self.set_default_size(800, 600)
-        # self.set_border_width(10)
 
         self.download_button = Gtk.Button(label="Загрузить из API")
         self.download_button.connect("clicked", self.on_download_button_clicked)
@@ -21,20 +20,22 @@ class MainView(Gtk.Window):
 
         self.list_box = Gtk.ListBox()
         self.list_box.set_selection_mode(Gtk.SelectionMode.NONE)
+
         self.scrolled_window = Gtk.ScrolledWindow()
         self.scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.scrolled_window.set_hexpand(True)
         self.scrolled_window.set_vexpand(True)
         self.scrolled_window.add(self.list_box)
+
         self.grid = Gtk.Grid()
         self.grid.attach(self.download_button, 0, 0, 1, 1)
         self.grid.attach(self.file_button, 1, 0, 1, 1)
         self.grid.attach(self.scrolled_window, 0, 1, 2, 1)
-        self.grid.set_row_homogeneous(False)  # Allow rows to expand
+        self.grid.set_row_homogeneous(False)
         self.grid.set_row_spacing(10)
         self.add(self.grid)
 
-    def on_download_button_clicked(self, widget):
+    def on_download_button_clicked(self, _):
         loading_dialog = LoadingDialog(self, "Загрузка из API...", MainController.load_from_api)
         loading_dialog.run()
         self.clear_list_box()
@@ -44,7 +45,7 @@ class MainView(Gtk.Window):
         loading_dialog.destroy()
         self.show_all()
 
-    def on_file_button_clicked(self, widget):
+    def on_file_button_clicked(self, _):
         loading_dialog = LoadingDialog(self, "Загрузка из файла...", MainController.load_from_file)
         loading_dialog.run()
         self.clear_list_box()
@@ -53,7 +54,7 @@ class MainView(Gtk.Window):
         loading_dialog.destroy()
         self.show_all()
 
-    def add_list_item(self, text):
+    def add_list_item(self, text: str):
         row = Gtk.ListBoxRow()
         label = Gtk.Label(label=text)
         row.add(label)

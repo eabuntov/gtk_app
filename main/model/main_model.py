@@ -2,6 +2,8 @@ import asyncio
 import aiohttp
 import csv
 
+from config import APIS, CSV_PATH
+
 
 async def fetch_data(urls: tuple) -> list:
     tasks = [asyncio.create_task(fetch_api(url)) for url in urls]
@@ -14,18 +16,17 @@ async def fetch_api(url: str) -> list:
             return await response.json(content_type='text/html')
 
 
-class MainModel():
+class MainModel:
 
-    def __init__(self, urls: tuple = ("https://paycon.su/api1.php",
-                                      "https://paycon.su/api2.php"),
-                 path: str = "test_assignment/База для тестового.csv"):
+    def __init__(self, urls: tuple = APIS,
+                 path: str = CSV_PATH):
         self.urls = urls
         self.path = path
 
     def fetch_apis(self) -> list:
         return asyncio.run(fetch_data(self.urls))
 
-    def csv_reader(self):
+    def csv_reader(self) -> str:
         with open(self.path, encoding="utf8") as f:
             reader = csv.reader(f, delimiter=',')
             next(reader, None)
