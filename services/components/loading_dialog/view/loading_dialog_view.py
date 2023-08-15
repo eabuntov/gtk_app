@@ -6,8 +6,7 @@ from gi.repository import GObject
 
 class LoadingDialog(Gtk.Dialog):
     def __init__(self, parent, title: str, load_func: Callable):
-        Gtk.Dialog.__init__(self, title, parent, 0, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                                     Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        Gtk.Dialog.__init__(self, title, parent, 0, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL))
 
         box = self.get_content_area()
         self.spinner = Gtk.Spinner()
@@ -28,6 +27,7 @@ class LoadingDialog(Gtk.Dialog):
     def stop_progress(self):
         self.spinner.stop()
         self.work_thread.join()
+        self.destroy()
 
     def get_result(self):
         return self.result
