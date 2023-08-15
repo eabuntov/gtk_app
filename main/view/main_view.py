@@ -21,11 +21,17 @@ class MainView(Gtk.Window):
 
         self.list_box = Gtk.ListBox()
         self.list_box.set_selection_mode(Gtk.SelectionMode.NONE)
-
+        self.scrolled_window = Gtk.ScrolledWindow()
+        self.scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scrolled_window.set_hexpand(True)
+        self.scrolled_window.set_vexpand(True)
+        self.scrolled_window.add(self.list_box)
         self.grid = Gtk.Grid()
         self.grid.attach(self.download_button, 0, 0, 1, 1)
         self.grid.attach(self.file_button, 1, 0, 1, 1)
-        self.grid.attach(self.list_box, 0, 2, 4, 1)
+        self.grid.attach(self.scrolled_window, 0, 1, 2, 1)
+        self.grid.set_row_homogeneous(False)  # Allow rows to expand
+        self.grid.set_row_spacing(10)
         self.add(self.grid)
 
     def on_download_button_clicked(self, widget):
